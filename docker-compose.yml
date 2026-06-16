@@ -34,8 +34,8 @@ services:
 
   glms-frontend-web:
     build:
-      context: ./TechMoves_Formative2
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: TechMoves_Formative2/Dockerfile
     container_name: glms-frontend-web
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
