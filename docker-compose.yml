@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+
+  sql-server-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql-server-db
+    environment:
+      SA_PASSWORD: "TechMoves@123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - techmoves-network
+
+  glms-backend-api:
+    build:
+      context: ./TechMoves_API
+      dockerfile: Dockerfile
+    container_name: glms-backend-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Server=sql-server-db;Database=TechMoveDb;User Id=sa;Password=TechMoves@123;TrustServerCertificate=True
+      - Jwt__Key=TechMovesSecretKey123!TechMovesSecretKey123!
+      - Jwt__Issuer=TechMovesAPI
+      - Jwt__Audience=TechMovesMVC
+    ports:
+      - "5000:8080"
+    depends_on:
+      - sql-server-db
+    networks:
+      - techmoves-network
+
+  glms-frontend-web:
+    build:
+      context: ./TechMoves_Formative2
+      dockerfile: Dockerfile
+    container_name: glms-frontend-web
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ApiSettings__BaseUrl=http://glms-backend-api:8080
+    ports:
+      - "5001:8080"
+    depends_on:
+      - glms-backend-api
+    networks:
+      - techmoves-network
+
+networks:
+  techmoves-network:
+    driver: bridge
