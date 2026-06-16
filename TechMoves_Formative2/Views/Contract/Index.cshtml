@@ -1,0 +1,111 @@
+@model IEnumerable<TechMoves_Formative2.Models.Contract>
+
+@{
+    ViewData["Title"] = "Contracts";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="mb-1">Contracts</h1>
+        <p class="text-muted mb-0">Manage active, expired, draft, and on-hold contracts.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">
+        + Create New Contract
+    </a>
+</div>
+
+<form asp-action="Index" method="get" class="row g-3 mb-4">
+    <div class="col-md-3">
+        <label class="form-label">Status</label>
+        <select name="statusFilter" class="form-select" asp-items="ViewBag.StatusList">
+            <option value="">All Statuses</option>
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Start Date From</label>
+        <input type="date" name="startDateFilter" class="form-control" value="@ViewData["StartDateFilter"]" />
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">End Date To</label>
+        <input type="date" name="endDateFilter" class="form-control" value="@ViewData["EndDateFilter"]" />
+    </div>
+
+    <div class="col-md-3 d-flex align-items-end gap-2">
+        <button type="submit" class="btn btn-primary">Filter</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
+    </div>
+</form>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.ContractName)</th>
+                        <th>@Html.DisplayNameFor(model => model.StartDate)</th>
+                        <th>@Html.DisplayNameFor(model => model.EndDate)</th>
+                        <th>@Html.DisplayNameFor(model => model.Status)</th>
+                        <th>@Html.DisplayNameFor(model => model.ServiceLevel)</th>
+                        <th>@Html.DisplayNameFor(model => model.Client)</th>
+                        <th>Agreement</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@item.ContractName</td>
+                            <td>@item.StartDate.ToShortDateString()</td>
+                            <td>@item.EndDate.ToShortDateString()</td>
+                            <td>
+                                @if (item.Status == "Active")
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                                else if (item.Status == "Expired")
+                                {
+                                    <span class="badge bg-danger">Expired</span>
+                                }
+                                else if (item.Status == "On Hold")
+                                {
+                                    <span class="badge bg-warning text-dark">On Hold</span>
+                                }
+                                else if (item.Status == "Draft")
+                                {
+                                    <span class="badge bg-secondary">Draft</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-dark">@item.Status</span>
+                                }
+                            </td>
+                            <td>@item.ServiceLevel</td>
+                            <td>@item.Client?.ClientName</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.AgreementFilePath))
+                                {
+                                    <a href="@item.AgreementFilePath" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                        View PDF
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No file</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <a asp-action="Edit" asp-route-id="@item.ContractID" class="btn btn-sm btn-outline-primary">Edit</a>
+                                <a asp-action="Details" asp-route-id="@item.ContractID" class="btn btn-sm btn-outline-info">Details</a>
+                                <a asp-action="Delete" asp-route-id="@item.ContractID" class="btn btn-sm btn-outline-danger">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

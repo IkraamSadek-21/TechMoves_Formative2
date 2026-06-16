@@ -1,0 +1,81 @@
+@model IEnumerable<TechMoves_Formative2.Models.ServiceRequest>
+
+@{
+    ViewData["Title"] = "Service Requests";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="mb-1">Service Requests</h1>
+        <p class="text-muted mb-0">Track logistics requests, costs, statuses, and linked contracts.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">
+        + Create New Request
+    </a>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.RequestType)</th>
+                        <th>@Html.DisplayNameFor(model => model.Description)</th>
+                        <th>@Html.DisplayNameFor(model => model.Cost)</th>
+                        <th>@Html.DisplayNameFor(model => model.LocalCostZAR)</th>
+                        <th>@Html.DisplayNameFor(model => model.Status)</th>
+                        <th>@Html.DisplayNameFor(model => model.Contract)</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <span class="fw-semibold">@item.RequestType</span>
+                            </td>
+                            <td>@item.Description</td>
+                            <td>$@item.Cost.ToString("N2")</td>
+                            <td>
+                                @if (item.LocalCostZAR.HasValue)
+                                {
+                                    <span>R @item.LocalCostZAR.Value.ToString("N2")</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Not calculated</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.Status == "Pending")
+                                {
+                                    <span class="badge bg-secondary">Pending</span>
+                                }
+                                else if (item.Status == "In Progress")
+                                {
+                                    <span class="badge bg-warning text-dark">In Progress</span>
+                                }
+                                else if (item.Status == "Completed")
+                                {
+                                    <span class="badge bg-success">Completed</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-dark">@item.Status</span>
+                                }
+                            </td>
+                            <td>@item.Contract?.ContractName</td>
+                            <td class="text-end">
+                                <a asp-action="Edit" asp-route-id="@item.ServiceRequestID" class="btn btn-sm btn-outline-primary">Edit</a>
+                                <a asp-action="Details" asp-route-id="@item.ServiceRequestID" class="btn btn-sm btn-outline-info">Details</a>
+                                <a asp-action="Delete" asp-route-id="@item.ServiceRequestID" class="btn btn-sm btn-outline-danger">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

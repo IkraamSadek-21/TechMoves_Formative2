@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="p-5 mb-4 bg-white rounded-3 shadow-sm border">
+    <div class="container-fluid py-4">
+        <h1 class="display-5 fw-bold text-dark">TechMoves Global Logistics Management System</h1>
+        <p class="col-md-9 fs-5 text-muted">
+            A streamlined platform for managing clients, contracts, service requests, pricing, and logistics workflows.
+        </p>
+        <div class="mt-4">
+            <a asp-controller="Client" asp-action="Index" class="btn btn-primary btn-lg me-2">Manage Clients</a>
+            <a asp-controller="Contract" asp-action="Index" class="btn btn-outline-dark btn-lg me-2">View Contracts</a>
+            <a asp-controller="ServiceRequest" asp-action="Index" class="btn btn-outline-success btn-lg">Service Requests</a>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+                <h4 class="card-title">Client Management</h4>
+                <p class="card-text text-muted">
+                    Add, update, and manage client information including contact details and operating regions.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+                <h4 class="card-title">Contract Tracking</h4>
+                <p class="card-text text-muted">
+                    Monitor contract lifecycles, service levels, signed agreements, and status updates.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+                <h4 class="card-title">Service Requests</h4>
+                <p class="card-text text-muted">
+                    Create and manage transport and delivery requests with cost tracking and local currency conversion.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

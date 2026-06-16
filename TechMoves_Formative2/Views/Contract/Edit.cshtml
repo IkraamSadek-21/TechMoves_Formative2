@@ -1,0 +1,74 @@
+@model TechMoves_Formative2.Models.Contract
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Contract</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ContractID" />
+            <input type="hidden" asp-for="AgreementFilePath" />
+            <div class="form-group">
+                <label asp-for="ContractName" class="control-label"></label>
+                <input asp-for="ContractName" class="form-control" />
+                <span asp-validation-for="ContractName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartDate" class="control-label"></label>
+                <input asp-for="StartDate" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndDate" class="control-label"></label>
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" class="form-control" asp-items="ViewBag.StatusList">
+                    <option value="">-- Select Status --</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ServiceLevel" class="control-label"></label>
+                <input asp-for="ServiceLevel" class="form-control" />
+                <span asp-validation-for="ServiceLevel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AgreementFile" class="control-label"></label>
+                <input asp-for="AgreementFile" type="file" class="form-control" accept=".pdf" />
+                <span asp-validation-for="AgreementFile" class="text-danger"></span>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.AgreementFilePath))
+            {
+                <div class="mt-2">
+                    <a href="@Model.AgreementFilePath" target="_blank" class="btn btn-secondary">Download Current Agreement</a>
+                </div>
+            }
+
+            <div class="form-group">
+                <label asp-for="ClientID" class="control-label"></label>
+                <select asp-for="ClientID" class="form-control" asp-items="ViewBag.ClientID"></select>
+                <span asp-validation-for="ClientID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
