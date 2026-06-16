@@ -100,3 +100,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+public partial class Program { } //makes this file testable for integration tests
