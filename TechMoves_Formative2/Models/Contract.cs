@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-
 namespace TechMoves_Formative2.Models
 {
     public class Contract
@@ -34,7 +33,7 @@ namespace TechMoves_Formative2.Models
         [Display(Name = "Signed Agreement File")]
         public string? AgreementFilePath { get; set; }
 
-        [NotMapped] //used for upload only
+        [NotMapped]
         [Display(Name = "Signed Agreement PDF")]
         public IFormFile? AgreementFile { get; set; }
 
@@ -42,8 +41,8 @@ namespace TechMoves_Formative2.Models
         public int ClientID { get; set; }
         public Client? Client { get; set; }
 
+        public string? ClientName { get; set; }
+
         public ICollection<ServiceRequest> ServiceRequests { get; set; } = new List<ServiceRequest>();
-
-
     }
 }

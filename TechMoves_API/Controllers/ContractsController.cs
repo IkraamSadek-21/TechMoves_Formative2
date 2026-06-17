@@ -83,6 +83,29 @@ namespace TechMoves_API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = contract.ContractID }, contract);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] CreateContractDto dto)
+        {
+            var contract = await _context.Contracts.FindAsync(id);
+            if (contract == null) return NotFound();
+
+            var oldStatus = contract.Status;
+
+            contract.ContractName = dto.ContractName;
+            contract.StartDate = dto.StartDate;
+            contract.EndDate = dto.EndDate;
+            contract.Status = dto.Status;
+            contract.ServiceLevel = dto.ServiceLevel;
+            contract.ClientID = dto.ClientID;
+
+            await _context.SaveChangesAsync();
+
+            if (oldStatus != dto.Status)
+                _notifier.Notify(contract.ContractName, dto.Status);
+
+            return NoContent();
+        }
+
         [HttpPut("{id}/status")]
         public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateContractStatusDto dto)
         {

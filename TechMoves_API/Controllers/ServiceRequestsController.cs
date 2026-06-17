@@ -9,9 +9,9 @@ using TechMoves_API.Models;
 using TechMoves_API.Services;
 using TechMoves_API.Strategies;
 using static TechMoves_API.DTOs.ServiceRequestDtos;
+
 namespace TechMoves_API.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
@@ -92,6 +92,27 @@ namespace TechMoves_API.Controllers
                 Status = request.Status,
                 ContractID = request.ContractID
             });
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] CreateServiceRequestDto dto)
+        {
+            var request = await _context.ServiceRequests.FindAsync(id);
+            if (request == null) return NotFound();
+
+            IPricingStrategy strategy = dto.RequestType == "Delivery"
+                ? new DiscountPricingStrategy()
+                : new StandardPricingStrategy();
+
+            request.RequestType = dto.RequestType;
+            request.Description = dto.Description;
+            request.Cost = strategy.CalculateCost(dto.Cost);
+            request.Status = dto.Status;
+            request.ContractID = dto.ContractID;
+            request.LocalCostZAR = await _currencyService.ConvertUsdToZarAsync(request.Cost);
+
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
