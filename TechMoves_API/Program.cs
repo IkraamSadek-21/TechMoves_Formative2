@@ -93,12 +93,6 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<TechMoveDb>();
     db.Database.Migrate();
-}
-// Auto-migrate database on startup
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<TechMoveDb>();
-    db.Database.Migrate();
 
     // Seed dummy data if empty
     if (!db.Clients.Any())
