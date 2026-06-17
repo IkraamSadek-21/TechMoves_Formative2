@@ -7,6 +7,7 @@ using TechMoves_API.Data;
 using TechMoves_API.Factories;
 using TechMoves_API.Observers;
 using TechMoves_API.Services;
+using TechMoves_API.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -92,6 +93,43 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<TechMoveDb>();
     db.Database.Migrate();
+}
+// Auto-migrate database on startup
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<TechMoveDb>();
+    db.Database.Migrate();
+
+    // Seed dummy data if empty
+    if (!db.Clients.Any())
+    {
+        var clients = new List<Client>
+        {
+            new Client { ClientName = "Acme Corporation", ClientEmail = "acme@email.com", ClientRegion = "Gauteng" },
+            new Client { ClientName = "BlueSky Logistics", ClientEmail = "bluesky@email.com", ClientRegion = "Western Cape" },
+            new Client { ClientName = "Nova Tech", ClientEmail = "nova@email.com", ClientRegion = "KwaZulu-Natal" }
+        };
+        db.Clients.AddRange(clients);
+        db.SaveChanges();
+
+        var contracts = new List<Contract>
+        {
+            new Contract { ContractName = "Acme Support Contract", StartDate = DateTime.Now, EndDate = DateTime.Now.AddYears(1), Status = "Active", ServiceLevel = "Gold", ClientID = clients[0].ClientID },
+            new Contract { ContractName = "BlueSky Maintenance", StartDate = DateTime.Now, EndDate = DateTime.Now.AddMonths(6), Status = "Active", ServiceLevel = "Silver", ClientID = clients[1].ClientID },
+            new Contract { ContractName = "Nova Tech Premium", StartDate = DateTime.Now, EndDate = DateTime.Now.AddYears(2), Status = "Pending", ServiceLevel = "Platinum", ClientID = clients[2].ClientID }
+        };
+        db.Contracts.AddRange(contracts);
+        db.SaveChanges();
+
+        var serviceRequests = new List<ServiceRequest>
+        {
+            new ServiceRequest { RequestType = "Hardware Repair", Description = "Replace faulty server hardware", Cost = 5000.00m, Status = "Open", ContractID = contracts[0].ContractID },
+            new ServiceRequest { RequestType = "Network Setup", Description = "Configure internal office network", Cost = 3500.00m, Status = "In Progress", ContractID = contracts[1].ContractID },
+            new ServiceRequest { RequestType = "Software Installation", Description = "Install and configure ERP system", Cost = 12000.00m, Status = "Completed", ContractID = contracts[2].ContractID }
+        };
+        db.ServiceRequests.AddRange(serviceRequests);
+        db.SaveChanges();
+    }
 }
 
 if (app.Environment.IsDevelopment())
