@@ -12,6 +12,12 @@ services:
       - "1433:1433"
     networks:
       - techmoves-network
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "TechMoves@123", "-Q", "SELECT 1", "-No"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   glms-backend-api:
     build:
@@ -28,7 +34,8 @@ services:
     ports:
       - "5000:8080"
     depends_on:
-      - sql-server-db
+      sql-server-db:
+        condition: service_healthy
     networks:
       - techmoves-network
 

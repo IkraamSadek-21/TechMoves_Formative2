@@ -3,29 +3,26 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TechMoves_Formative2.Data;
+using TechMoves_API.Data;
 
 #nullable disable
 
-namespace TechMoves_Formative2.Migrations
+namespace TechMoves_API.Migrations
 {
     [DbContext(typeof(TechMoveDb))]
-    [Migration("20260516131103_AddContractAndServiceRequestTables")]
-    partial class AddContractAndServiceRequestTables
+    partial class TechMoveDbModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.22")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("TechMoves_Formative2.Models.Client", b =>
+            modelBuilder.Entity("TechMoves_API.Models.Client", b =>
                 {
                     b.Property<int>("ClientID")
                         .ValueGeneratedOnAdd()
@@ -50,7 +47,7 @@ namespace TechMoves_Formative2.Migrations
                     b.ToTable("Clients");
                 });
 
-            modelBuilder.Entity("TechMoves_Formative2.Models.Contract", b =>
+            modelBuilder.Entity("TechMoves_API.Models.Contract", b =>
                 {
                     b.Property<int>("ContractID")
                         .ValueGeneratedOnAdd()
@@ -89,7 +86,7 @@ namespace TechMoves_Formative2.Migrations
                     b.ToTable("Contracts");
                 });
 
-            modelBuilder.Entity("TechMoves_Formative2.Models.ServiceRequest", b =>
+            modelBuilder.Entity("TechMoves_API.Models.ServiceRequest", b =>
                 {
                     b.Property<int>("ServiceRequestID")
                         .ValueGeneratedOnAdd()
@@ -107,6 +104,13 @@ namespace TechMoves_Formative2.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal?>("LocalCostZAR")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("RequestType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -118,9 +122,9 @@ namespace TechMoves_Formative2.Migrations
                     b.ToTable("ServiceRequests");
                 });
 
-            modelBuilder.Entity("TechMoves_Formative2.Models.Contract", b =>
+            modelBuilder.Entity("TechMoves_API.Models.Contract", b =>
                 {
-                    b.HasOne("TechMoves_Formative2.Models.Client", "Client")
+                    b.HasOne("TechMoves_API.Models.Client", "Client")
                         .WithMany("Contracts")
                         .HasForeignKey("ClientID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -129,9 +133,9 @@ namespace TechMoves_Formative2.Migrations
                     b.Navigation("Client");
                 });
 
-            modelBuilder.Entity("TechMoves_Formative2.Models.ServiceRequest", b =>
+            modelBuilder.Entity("TechMoves_API.Models.ServiceRequest", b =>
                 {
-                    b.HasOne("TechMoves_Formative2.Models.Contract", "Contract")
+                    b.HasOne("TechMoves_API.Models.Contract", "Contract")
                         .WithMany("ServiceRequests")
                         .HasForeignKey("ContractID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -140,12 +144,12 @@ namespace TechMoves_Formative2.Migrations
                     b.Navigation("Contract");
                 });
 
-            modelBuilder.Entity("TechMoves_Formative2.Models.Client", b =>
+            modelBuilder.Entity("TechMoves_API.Models.Client", b =>
                 {
                     b.Navigation("Contracts");
                 });
 
-            modelBuilder.Entity("TechMoves_Formative2.Models.Contract", b =>
+            modelBuilder.Entity("TechMoves_API.Models.Contract", b =>
                 {
                     b.Navigation("ServiceRequests");
                 });
